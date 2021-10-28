@@ -138,7 +138,12 @@ export const request = async (options: HttpOptions): Promise<HttpResponse> => {
       data = await readBlobAsBase64(blob);
       break;
     case 'json':
-      data = await response.json();
+      const responseText = await response.text();
+      try {
+        data = responseText !== '' ? JSON.parse(responseText) : null;
+      } catch {
+        data = responseText;
+      }
       break;
     case 'document':
     case 'text':
